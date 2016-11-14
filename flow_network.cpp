@@ -138,7 +138,7 @@ bool FlowNetwork::AssignLevels() {
 		} else {
 			visited_vertices[current_vertex] = true;
 			for (int next_vertex = 0; next_vertex < vertices_quentity_; ++next_vertex) {
-				if ( !visited_vertices[next_vertex] && edges_.[next_vertex].capacity_remained_ > 0) { 
+				if ( !visited_vertices[next_vertex] && edges_[current_vertex][next_vertex].capacity_remained_ > 0) { 
 					// if we have opportunity to get into the unvisited next_vertex
 					levels_[next_vertex] = levels_[current_vertex] + 1;
 					queue_of_vertices.push(next_vertex);
@@ -147,4 +147,45 @@ bool FlowNetwork::AssignLevels() {
 		}
 	}
 	return levels_[target_number_] > 0; 
+}
+
+int FlowNetwork::DfsInLayeredNetwork(const int& vertex_from, const int flow, std::vector<int> possible_next_vertices) {
+	// possible_next_vertices[i] - min No of next vertex, which we can reach target through
+	if (flow == 0) {
+		return 0;
+	} else if (vertex_from == target_number_) {
+		return flow;
+	} else {
+		for (int vertex_to = possible_next_vertices[vertex_from]; vertex_to < vertices_quentity_; ++vertex_to) {
+			if (levels_[vertex_to] != levels_[vertex_from] + 1) {
+				continue;
+			}
+			int delta_of_pushing = DfsInLayeredNetwork(vertex_to, std::min(flow, edges_[vertex_from][vertex_to].capacity_remained_), possible_next_vertices);
+			if (delta_of_pushing > 0) {
+				edges_[vertex_from][vertex_to].flow_ += delta_of_pushing;
+				edges_[vertex_from][vertex_to].capacity_remained_ -= delta_of_pushing;
+				edges_[vertex_to][vertex_from].flow_ -= delta_of_pushing;
+				edges_[vertex_to][vertex_from].capacity_remained_ += delta_of_pushing;
+				return delta_of_pushing;
+			}  // ???
+		}
+		return 0;
+	}
+}
+
+int FlowNetwork::FindMaxFlowByDinitz() {
+	int result_flow = 0;
+	while (true) {
+		if (!AssignLevels()) {
+			break;
+		} else {
+			std::vector<int> possible_next_vertices(vertices_quentity_);
+			// possible_next_vertices[i] - min No of next vertex, which we can reach target through
+			std::fill(possible_next_vertices.begin(), possible_next_vertices.end(), 0);
+			while (int delta_of_pushing = DfsInLayeredNetwork(source_number_, std::numeric_limits<int>::max(), possible_next_vertices)) {
+				result_flow += delta_of_pushing;
+			}
+		}
+	}
+	return result_flow;
 }

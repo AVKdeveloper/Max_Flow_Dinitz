@@ -1,5 +1,5 @@
 // This program finds max flow in undirected graph
-// We use Push & Relable of preflow algorithm
+// We use algorithm by Dinitz
 // O(V^2 * E)
 
 #include <iostream>
@@ -25,7 +25,7 @@ int main() {
 			std::cin >> from_number >> to_number >> capacity;
 			net.AddEdge(from_number - 1, to_number - 1, capacity);
 		}
-		std::cout << net.FindMaxFlowByPushingOfPreflow() << std::endl;
+		std::cout << net.FindMaxFlowByDinitz() << std::endl;
 	}
 
 

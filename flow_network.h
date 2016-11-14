@@ -4,6 +4,7 @@
 #include <vector>
 #include <queue>
 #include <algorithm>
+#include <climits>
 
 struct Edge {
 	bool existing_;
@@ -29,7 +30,8 @@ public:
 	int FindMaxFlowByPushingOfPreflow();
 
 	bool AssignLevels();
-
+	int DfsInLayeredNetwork(const int& vertex_from, const int flow, std::vector<int> possible_next_vertices);
+	int FindMaxFlowByDinitz();
 };
 
 
