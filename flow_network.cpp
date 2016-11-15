@@ -167,7 +167,9 @@ int FlowNetwork::DfsInLayeredNetwork(const int& vertex_from, const int flow, std
 				edges_[vertex_to][vertex_from].flow_ -= delta_of_pushing;
 				edges_[vertex_to][vertex_from].capacity_remained_ += delta_of_pushing;
 				return delta_of_pushing;
-			}  // ???
+			} else {
+				possible_next_vertices[vertex_from] += 1;
+			}
 		}
 		return 0;
 	}
