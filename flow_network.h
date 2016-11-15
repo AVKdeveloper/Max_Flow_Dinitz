@@ -30,7 +30,7 @@ public:
 	int FindMaxFlowByPushingOfPreflow();
 
 	bool AssignLevels();
-	int DfsInLayeredNetwork(const int& vertex_from, const int flow, std::vector<int> possible_next_vertices);
+	int DfsInLayeredNetwork(const int& vertex_from, const int flow, std::vector<int>& possible_next_vertices);
 	int FindMaxFlowByDinitz();
 };
 

@@ -149,7 +149,7 @@ bool FlowNetwork::AssignLevels() {
 	return levels_[target_number_] > 0; 
 }
 
-int FlowNetwork::DfsInLayeredNetwork(const int& vertex_from, const int flow, std::vector<int> possible_next_vertices) {
+int FlowNetwork::DfsInLayeredNetwork(const int& vertex_from, const int flow, std::vector<int>& possible_next_vertices) {
 	// possible_next_vertices[i] - min No of next vertex, which we can reach target through
 	if (flow == 0) {
 		return 0;
@@ -158,6 +158,7 @@ int FlowNetwork::DfsInLayeredNetwork(const int& vertex_from, const int flow, std
 	} else {
 		for (int vertex_to = possible_next_vertices[vertex_from]; vertex_to < vertices_quentity_; ++vertex_to) {
 			if (levels_[vertex_to] != levels_[vertex_from] + 1) {
+				possible_next_vertices[vertex_from] += 1;
 				continue;
 			}
 			int delta_of_pushing = DfsInLayeredNetwork(vertex_to, std::min(flow, edges_[vertex_from][vertex_to].capacity_remained_), possible_next_vertices);
